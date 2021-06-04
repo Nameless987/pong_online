@@ -1,6 +1,4 @@
-from tkinter import Tk
-from tkinter import Canvas
-from tkinter import ALL
+from tkinter import *
 import numpy as np
 from math import *
 from random import *
