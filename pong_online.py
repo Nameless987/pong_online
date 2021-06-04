@@ -1,4 +1,6 @@
-from tkinter import *
+from tkinter import Tk
+from tkinter import Canvas
+from tkinter import ALL
 import numpy as np
 from math import *
 from random import *
@@ -60,7 +62,9 @@ def draw():
 def control():
     if keyboard.is_pressed("space"):
         ball.v = 1
-        ball.alpha = random.random()*np.pi*2 
+        ball.alpha = 0#random.random()*np.pi*2 
+        ball.vx = ball.v*np.cos(ball.alpha)
+        ball.vy = ball.v*np.sin(ball.alpha)
 
     if keyboard.is_pressed("up"):
         p1.y -= p1.vy
@@ -76,10 +80,8 @@ def control():
 #brain
 
 def brain():
-    ball.vx = ball.v*np.cos(ball.alpha)
-    ball.vy = ball.v*np.sin(ball.alpha)
-    ball.x += ball.vx
-    ball.y += ball.vy
+    ball.x += ball.vx #ball.v*np.cos(ball.alpha)
+    ball.y += ball.vy #ball.v*np.sin(ball.alpha)
 
     if(ball.x-20 <= 0 or ball.x+20 >= 1600):
         tk.destroy()
@@ -96,27 +98,33 @@ def new_checkpoint():
 def collision():
     if(ball.y-20 <= 0 or ball.y+20 >= 900):
         ball.alpha *= -1
-        
+        ball.vx = ball.v*np.cos(ball.alpha)
+        ball.vy = ball.v*np.sin(ball.alpha)
+    
     if(p1.y-75 <= 0):
         p1.y = 75
-        
+    
     if(p1.y+75 >= 900):
         p1.y = 825
-        
+    
     if(p2.y-75 <= 0):
         p2.y = 75
-        
+    
     if(p2.y+75 >= 900):
         p2.y = 825
 
     if(ball.x+20 >= p1.x-10 and ball.x-20 <= p1.x+10 and ball.y+20 >= p1.y-75 and ball.y-20 <= p1.y+75):
         ball.alpha = (1-(ball.y-p1.y)/300)*np.pi
         ball.v *= 1.01
+        ball.vx = ball.v*np.cos(ball.alpha)
+        ball.vy = ball.v*np.sin(ball.alpha)
         ball.color="red"
 
     if(ball.x-20 <= p2.x+10 and ball.x+20 >= p2.x-10 and ball.y+20 >= p2.y-75 and ball.y-20 <= p2.y+75):
         ball.alpha = (1-(p2.y-ball.y)/300)*np.pi+np.pi
         ball.v *= 1.01
+        ball.vx = ball.v*np.cos(ball.alpha)
+        ball.vy = ball.v*np.sin(ball.alpha)
         ball.color="blue"
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
