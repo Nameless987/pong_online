@@ -2,6 +2,7 @@ from tkinter import *
 import numpy as np
 from math import *
 from random import *
+import random
 import keyboard
 
 tk = Tk()
@@ -20,7 +21,7 @@ class player(object):
         self.name = name
         self.x = 800
         self.y = 450
-        self.vy = 2
+        self.vy = 10
         self.draw = 0
 
 class point(object):
@@ -34,10 +35,10 @@ class point(object):
         self.color = "white"
         self.draw = 0
 
-p1 = player(0)
-p2 = player(1)
-p1.x = 1500
-p2.x = 100
+player1 = player(0)
+player2 = player(1)
+player1.x = 1500
+player2.x = 100
 
 ball = point()
 
@@ -45,12 +46,11 @@ ball = point()
 #draw
 
 def draw():
-    cnv.delete(ALL)
-    cnv.delete(p1.draw)
-    cnv.delete(p2.draw)
+    cnv.delete(player1.draw)
+    cnv.delete(player2.draw)
     cnv.delete(ball.draw)
-    p1.draw = cnv.create_rectangle(p1.x-10, p1.y-75, p1.x+10, p1.y+75, fill="red")
-    p2.draw = cnv.create_rectangle(p2.x-10, p2.y-75, p2.x+10, p2.y+75, fill="blue")
+    player1.draw = cnv.create_rectangle(player1.x-10, player1.y-75, player1.x+10, player1.y+75, fill="red")
+    player2.draw = cnv.create_rectangle(player2.x-10, player2.y-75, player2.x+10, player2.y+75, fill="blue")
     ball.draw = cnv.create_rectangle(ball.x-20, ball.y-20, ball.x+20, ball.y+20, fill=ball.color)
     
 #-------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,30 +58,27 @@ def draw():
 
 def control():
     if keyboard.is_pressed("space"):
-        ball.v = 1
-        ball.alpha = 0#random.random()*np.pi*2 
-        ball.vx = ball.v*np.cos(ball.alpha)
-        ball.vy = ball.v*np.sin(ball.alpha)
+        ball.alpha = random.random()*2*np.pi
+        ball.v = 10
 
     if keyboard.is_pressed("up"):
-        p1.y -= p1.vy
+        player1.y -= player1.vy
     if keyboard.is_pressed("down"):
-        p1.y += p1.vy
+        player1.y += player1.vy
     
     if keyboard.is_pressed("z"):
-        p2.y -= p2.vy
+        player2.y -= player2.vy
     if keyboard.is_pressed("s"):
-        p2.y += p2.vy
+        player2.y += player2.vy
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 #brain
 
 def brain():
-    ball.x += ball.vx #ball.v*np.cos(ball.alpha)
-    ball.y += ball.vy #ball.v*np.sin(ball.alpha)
-
-    if(ball.x-20 <= 0 or ball.x+20 >= 1600):
-        tk.destroy()
+    ball.vx = ball.v*np.cos(ball.alpha)
+    ball.vy = ball.v*np.sin(ball.alpha)
+    ball.x += ball.vx
+    ball.y += ball.vy
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 #new_checkpoint
@@ -95,34 +92,38 @@ def new_checkpoint():
 def collision():
     if(ball.y-20 <= 0 or ball.y+20 >= 900):
         ball.alpha *= -1
-        ball.vx = ball.v*np.cos(ball.alpha)
-        ball.vy = ball.v*np.sin(ball.alpha)
-    
-    if(p1.y-75 <= 0):
-        p1.y = 75
-    
-    if(p1.y+75 >= 900):
-        p1.y = 825
-    
-    if(p2.y-75 <= 0):
-        p2.y = 75
-    
-    if(p2.y+75 >= 900):
-        p2.y = 825
+        
+    if(player1.y-75 <= 0):
+        player1.y = 75
+        
+    if(player1.y+75 >= 900):
+        player1.y = 825
+        
+    if(player2.y-75 <= 0):
+        player2.y = 75
+        
+    if(player2.y+75 >= 900):
+        player2.y = 825
 
-    if(ball.x+20 >= p1.x-10 and ball.x-20 <= p1.x+10 and ball.y+20 >= p1.y-75 and ball.y-20 <= p1.y+75):
-        ball.alpha = (1-(ball.y-p1.y)/300)*np.pi
+    if(ball.x+20 >= player1.x-10 and ball.x-20 <= player1.x+10 and ball.y+20 >= player1.y-75 and ball.y-20 <= player1.y+75):
+        ball.alpha = (1-(ball.y-player1.y)/300)*np.pi
         ball.v *= 1.01
-        ball.vx = ball.v*np.cos(ball.alpha)
-        ball.vy = ball.v*np.sin(ball.alpha)
         ball.color="red"
 
-    if(ball.x-20 <= p2.x+10 and ball.x+20 >= p2.x-10 and ball.y+20 >= p2.y-75 and ball.y-20 <= p2.y+75):
-        ball.alpha = (1-(p2.y-ball.y)/300)*np.pi+np.pi
+    if(ball.x-20 <= player2.x+10 and ball.x+20 >= player2.x-10 and ball.y+20 >= player2.y-75 and ball.y-20 <= player2.y+75):
+        ball.alpha = (1-(player2.y-ball.y)/300)*np.pi+np.pi
         ball.v *= 1.01
-        ball.vx = ball.v*np.cos(ball.alpha)
-        ball.vy = ball.v*np.sin(ball.alpha)
         ball.color="blue"
+
+    if(ball.x-20 <= 0):
+        ball.alpha = 0
+        ball.v *= 1.01
+        ball.color="blue"
+
+    if(ball.x+20 >= 1600):
+        ball.alpha = np.pi
+        ball.v *= 1.01
+        ball.color="red"
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 #main
@@ -132,7 +133,7 @@ def main():
     brain()
     collision()
     draw()
-    tk.after(1, main)
+    tk.after(10, main)
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 
