@@ -2,7 +2,6 @@ from tkinter import *
 import numpy as np
 from math import *
 from random import *
-import random
 import keyboard
 
 tk = Tk()
