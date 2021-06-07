@@ -1,12 +1,11 @@
-from tkinter import *
+import tkinter
 import numpy as np
 from math import *
 from random import *
 import random
 import keyboard
-
-tk = Tk()
-cnv=Canvas(tk, width=1600, height=900, bg="grey")
+tk = tkinter.Tk()
+cnv=tkinter.Canvas(tk, width=1600, height=900, bg="grey")
 cnv.pack(padx=0, pady=0)
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
