@@ -106,22 +106,22 @@ def collision():
 
     if(ball.x+20 >= player1.x-10 and ball.x-20 <= player1.x+10 and ball.y+20 >= player1.y-75 and ball.y-20 <= player1.y+75):
         ball.alpha = (1-(ball.y-player1.y)/300)*np.pi
-        ball.v *= 1.01
+        ball.v *= 1.02
         ball.color="red"
 
     if(ball.x-20 <= player2.x+10 and ball.x+20 >= player2.x-10 and ball.y+20 >= player2.y-75 and ball.y-20 <= player2.y+75):
         ball.alpha = (1-(player2.y-ball.y)/300)*np.pi+np.pi
-        ball.v *= 1.01
+        ball.v *= 1.02
         ball.color="blue"
 
     if(ball.x-20 <= 0):
         ball.alpha = 0
-        ball.v *= 1.01
+        ball.v *= 1.02
         ball.color="blue"
 
     if(ball.x+20 >= 1600):
         ball.alpha = np.pi
-        ball.v *= 1.01
+        ball.v *= 1.02
         ball.color="red"
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
